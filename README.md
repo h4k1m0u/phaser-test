@@ -1,3 +1,17 @@
+# Arcade game
+The player needs to eliminate all his enemies to win the game
+
+# Assets
+- **Sprite sheets:** [Jojo Jungle Pack] by [DidiGameB], 24 x 22 pixels / frame, license: CC-BY 3.0
+
+[Jojo Jungle Pack]: https://opengameart.org/content/jojo-jambo-free-sprite-pack
+[DidiGameB]: https://opengameart.org/users/didigameb
+
+# Credit
+Inspired by the official [Phaser3 tutorial].
+
+[Phaser3 tutorial]: https://phaser.io/tutorials/making-your-first-phaser-3-game/part1
+
 # Usage
 - Run development server: `npm run start`
 - Deployment: `npm run build`
@@ -71,8 +85,6 @@ If it was already installed, you need to force it to use TSServer instead of Ter
 ```bash
 third_party/ycmd/third_party/tern_runtime/node_modules
 ```
-
-- Add a [jsconfig.json][jsconfig] file similar to the one in this project at the root of your folder.
 
 - Finally, check that YouCompleteMe (YCM) is running correctly by looking at the logs whose paths are printed with:
 
