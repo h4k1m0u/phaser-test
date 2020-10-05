@@ -2,7 +2,9 @@ import Phaser from 'phaser';
 
 class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, textures) {
-    super(scene, x, y, textures.static);
+    super(scene, x, y, textures.static_right);
+    this.direction = 'right';
+    this.textures = textures;
 
     // add sprite to scene & attach body to it
     scene.add.existing(this);
@@ -26,8 +28,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
       repeat: 0,
     });
     scene.anims.create({
-      key: 'anim-jump',
-      frames: scene.anims.generateFrameNumbers(textures.jump, { start: 0, end: 8 }),
+      key: 'anim-jump-left',
+      frames: scene.anims.generateFrameNumbers(textures.jump_left, { start: 0, end: 8 }),
+      frameRate: 10,
+      repeat: 0,
+    });
+    scene.anims.create({
+      key: 'anim-jump-right',
+      frames: scene.anims.generateFrameNumbers(textures.jump_right, { start: 0, end: 8 }),
       frameRate: 10,
       repeat: 0,
     });
@@ -35,21 +43,30 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
   stop() {
     this.setVelocityX(0);
+
+    if (this.direction === 'left') {
+      this.setTexture(this.textures.static_left);
+    } else if (this.direction === 'right') {
+      this.setTexture(this.textures.static_right);
+    }
   }
 
   moveLeft() {
     this.setVelocityX(-150);
     this.anims.play('anim-left', true);
+    this.direction = 'left';
   }
 
   moveRight() {
     this.setVelocityX(150);
     this.anims.play('anim-right', true);
+    this.direction = 'right';
   }
 
   jump() {
     this.setVelocityY(-100);
-    this.anims.play('anim-jump', false);
+    this.direction = 'up';
+    this.anims.play((this.texture.key.endsWith('left')) ? 'anim-jump-left' : 'anim-jump-right', false);
   }
 }
 

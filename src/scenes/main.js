@@ -1,15 +1,20 @@
-import { Scene } from 'phaser';
+import { Scene, Input } from 'phaser';
 import Player from '../characters/player';
+import Bullets from '../characters/bullets';
 
 // import images
 import pathImageSky from '../images/sky.png';
 import pathImageStar from '../images/star.png';
 import pathImagePlatform from '../images/platform.png';
 
-import pathSpritePlayerStatic from '../images/player_static.png';
+import pathSpritePlayerStaticLeft from '../images/player_static_left.png';
+import pathSpritePlayerStaticRight from '../images/player_static_right.png';
 import pathSpritePlayerLeft from '../images/player_left.png';
 import pathSpritePlayerRight from '../images/player_right.png';
-import pathSpritePlayerJump from '../images/player_jump.png';
+import pathSpritePlayerJumpLeft from '../images/player_jump_left.png';
+import pathSpritePlayerJumpRight from '../images/player_jump_right.png';
+
+import pathBullet from '../images/bullet.png';
 
 class MainScene extends Scene {
   constructor(config) {
@@ -26,10 +31,15 @@ class MainScene extends Scene {
     this.load.image('platform', pathImagePlatform);
 
     // player texture & sprite sheets
-    this.load.image('player-static', pathSpritePlayerStatic);
+    this.load.image('player-static-left', pathSpritePlayerStaticLeft);
+    this.load.image('player-static-right', pathSpritePlayerStaticRight);
     this.load.spritesheet('player-left', pathSpritePlayerLeft, { spacing: 2, frameWidth: 22, frameHeight: 22 });
     this.load.spritesheet('player-right', pathSpritePlayerRight, { spacing: 2, frameWidth: 22, frameHeight: 22 });
-    this.load.spritesheet('player-jump', pathSpritePlayerJump, { spacing: 2, frameWidth: 22, frameHeight: 22 });
+    this.load.spritesheet('player-jump-left', pathSpritePlayerJumpLeft, { spacing: 2, frameWidth: 22, frameHeight: 22 });
+    this.load.spritesheet('player-jump-right', pathSpritePlayerJumpRight, { spacing: 2, frameWidth: 22, frameHeight: 22 });
+
+    // bullet sprite sheet
+    this.load.spritesheet('bullet', pathBullet, { spacing: 2, frameWidth: 8, frameHeight: 8 });
   }
 
   create() {
@@ -44,14 +54,20 @@ class MainScene extends Scene {
 
     // main player
     this.player = new Player(this, 100, 100, {
-      static: 'player-static',
+      static_left: 'player-static-left',
+      static_right: 'player-static-right',
       left: 'player-left',
       right: 'player-right',
-      jump: 'player-jump',
+      jump_left: 'player-jump-left',
+      jump_right: 'player-jump-right',
     });
 
     // collision detection for player
     this.physics.add.collider(this.player, this.platforms);
+
+    // bullets
+    this.bullets = new Bullets(this, 0, 0, 'bullet');
+    // this.physics.add.collider(this.bullet, this.platforms);
 
     // stars
     this.stars = this.physics.add.group({
@@ -91,6 +107,13 @@ class MainScene extends Scene {
       this.player.moveRight();
     } else {
       this.player.stop();
+    }
+
+    // player shooting bullets to the left/right
+    const spacebar = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.SPACE);
+    if (Input.Keyboard.JustDown(spacebar)) {
+      const x = this.player.x + ((this.player.direction === 'right') ? 10 : -10);
+      this.bullets.fire(x, this.player.y + 5, this.player.direction);
     }
   }
 }

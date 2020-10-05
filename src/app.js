@@ -17,6 +17,10 @@ const config = {
       },
     },
   },
+  fps: {
+    min: 30,
+    target: 30,
+  },
 };
 
 const game = new Phaser.Game(config);
