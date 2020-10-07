@@ -1,4 +1,4 @@
-# Arcade game
+# Platform game
 The player needs to eliminate all his enemies to win the game
 
 # Assets
@@ -8,9 +8,13 @@ The player needs to eliminate all his enemies to win the game
 [DidiGameB]: https://opengameart.org/users/didigameb
 
 # Credit
-Inspired by the official [Phaser3 tutorial].
+- Inspired by the official [Phaser3 tutorial].
+- Tilemap made with [tiled]. Also see this nice [tiled video tutorial], and this other tutorial about using these [tiles in phaser].
 
 [Phaser3 tutorial]: https://phaser.io/tutorials/making-your-first-phaser-3-game/part1
+[tiled]: https://www.mapeditor.org/
+[tiled video tutorial]: https://www.youtube.com/watch?v=ZwaomOYGuYo
+[tiles in phaser]: https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1-958fc7e6bbd6
 
 # Usage
 - Run development server: `npm run start`

@@ -3,9 +3,13 @@ import Player from '../characters/player';
 import Bullets from '../characters/bullets';
 
 // import images
+/*
 import pathImageSky from '../images/sky.png';
 import pathImageStar from '../images/star.png';
 import pathImagePlatform from '../images/platform.png';
+*/
+import pathTileset from '../tilemap/tileset.png';
+import pathTilemap from '../tilemap/map.json';
 
 import pathSpritePlayerStaticLeft from '../images/player_static_left.png';
 import pathSpritePlayerStaticRight from '../images/player_static_right.png';
@@ -25,10 +29,16 @@ class MainScene extends Scene {
   }
 
   preload() {
+    // tilemap
+    this.load.image('tileset', pathTileset);
+    this.load.tilemapTiledJSON('tilemap', pathTilemap);
+
+    /*
     // load images & sprites sheet
     this.load.image('sky', pathImageSky);
     this.load.image('star', pathImageStar);
     this.load.image('platform', pathImagePlatform);
+    */
 
     // player texture & sprite sheets
     this.load.image('player-static-left', pathSpritePlayerStaticLeft);
@@ -43,6 +53,12 @@ class MainScene extends Scene {
   }
 
   create() {
+    // tilemap produced in tiled, its tileset, and its layers
+    const tilemap = this.make.tilemap({ key: 'tilemap' });
+    const tileset = tilemap.addTilesetImage('tileset', 'tileset');
+    this.layer = tilemap.createStaticLayer('layer', tileset, 0, 0);
+
+    /*
     // background
     this.add.image(400, 300, 'sky');
 
@@ -51,6 +67,7 @@ class MainScene extends Scene {
     this.platforms.create(200, 200, 'platform');
     this.platforms.create(300, 350, 'platform');
     this.platforms.create(200, 500 - 16, 'platform');
+    */
 
     // main player
     this.player = new Player(this, 100, 100, {
@@ -62,14 +79,17 @@ class MainScene extends Scene {
       jump_right: 'player-jump-right',
     });
 
-    // collision detection for player
-    this.physics.add.collider(this.player, this.platforms);
+    // collision detection between player & tilemap
+    // this.physics.add.collider(this.player, this.platforms);
+    this.layer.setCollisionByProperty({ collides: true });
+    this.physics.add.collider(this.player, this.layer);
 
     // bullets
     this.bullets = new Bullets(this, 0, 0, 'bullet');
     // this.physics.add.collider(this.bullet, this.platforms);
 
     // stars
+    /*
     this.stars = this.physics.add.group({
       key: 'star',
       repeat: 11,
@@ -85,6 +105,7 @@ class MainScene extends Scene {
       this.score += 10;
       this.scoreText.setText(`Score: ${this.score}`);
     });
+    */
 
     // score text
     this.scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: 32, fill: '#000' });
@@ -97,7 +118,7 @@ class MainScene extends Scene {
     // possibility to jump while moving left/right
     this.player.setVelocityX(0);
 
-    if (cursors.up.isDown && this.player.body.touching.down) {
+    if (cursors.up.isDown && this.player.body.blocked.down) {
       this.player.jump();
     }
 
