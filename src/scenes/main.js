@@ -4,21 +4,32 @@ import Bullets from '../characters/bullets';
 
 // import images
 /*
-import pathImageSky from '../images/sky.png';
-import pathImageStar from '../images/star.png';
-import pathImagePlatform from '../images/platform.png';
+import pathImageStar from '../sprites/star.png';
 */
 import pathTileset from '../tilemap/tileset.png';
 import pathTilemap from '../tilemap/map.json';
 
-import pathSpritePlayerStaticLeft from '../images/player_static_left.png';
-import pathSpritePlayerStaticRight from '../images/player_static_right.png';
-import pathSpritePlayerLeft from '../images/player_left.png';
-import pathSpritePlayerRight from '../images/player_right.png';
-import pathSpritePlayerJumpLeft from '../images/player_jump_left.png';
-import pathSpritePlayerJumpRight from '../images/player_jump_right.png';
+// player images
+import pathSpritePlayerStaticLeft from '../sprites/player_static_left.png';
+import pathSpritePlayerStaticRight from '../sprites/player_static_right.png';
+import pathSpritePlayerLeft from '../sprites/player_left.png';
+import pathSpritePlayerRight from '../sprites/player_right.png';
+import pathSpritePlayerJumpLeft from '../sprites/player_jump_left.png';
+import pathSpritePlayerJumpRight from '../sprites/player_jump_right.png';
+import pathBullet from '../sprites/bullet.png';
 
-import pathBullet from '../images/bullet.png';
+// background images
+import pathCloud1 from '../sprites/clouds1.png';
+import pathCloud2 from '../sprites/clouds2.png';
+import pathJungle from '../sprites/jungle.png';
+import pathParallax1 from '../sprites/parallax1.png';
+import pathParallax2 from '../sprites/parallax2.png';
+
+// props images
+import pathTree1 from '../sprites/tree1.png';
+import pathTree2 from '../sprites/tree2.png';
+import pathPlant from '../sprites/plant.png';
+import pathSkullpanel from '../sprites/skullpanel.png';
 
 class MainScene extends Scene {
   constructor(config) {
@@ -33,11 +44,22 @@ class MainScene extends Scene {
     this.load.image('tileset', pathTileset);
     this.load.tilemapTiledJSON('tilemap', pathTilemap);
 
+    // background sprites
+    this.load.image('cloud1', pathCloud1);
+    this.load.image('cloud2', pathCloud2);
+    this.load.image('jungle', pathJungle);
+    this.load.image('parallax1', pathParallax1);
+    this.load.image('parallax2', pathParallax2);
+
+    // props sprites
+    this.load.image('tree1', pathTree1);
+    this.load.image('tree2', pathTree2);
+    this.load.image('plant', pathPlant);
+    this.load.image('skullpanel', pathSkullpanel);
+
     /*
     // load images & sprites sheet
-    this.load.image('sky', pathImageSky);
     this.load.image('star', pathImageStar);
-    this.load.image('platform', pathImagePlatform);
     */
 
     // player texture & sprite sheets
@@ -52,22 +74,32 @@ class MainScene extends Scene {
     this.load.spritesheet('bullet', pathBullet, { spacing: 2, frameWidth: 8, frameHeight: 8 });
   }
 
-  create() {
-    // tilemap produced in tiled, its tileset, and its layers
+  addFromTilemap() {
+    // add tilemap layers
     const tilemap = this.make.tilemap({ key: 'tilemap' });
-    const tileset = tilemap.addTilesetImage('tileset', 'tileset');
-    this.layer = tilemap.createStaticLayer('layer', tileset, 0, 0);
 
-    /*
-    // background
-    this.add.image(400, 300, 'sky');
+    // clouds
+    const clouds1 = tilemap.createFromObjects('clouds', 'cloud1', { key: 'cloud1' });
+    const clouds2 = tilemap.createFromObjects('clouds', 'cloud2', { key: 'cloud2' });
+
+    // background vegetation
+    const parallax1 = tilemap.createFromObjects('background', 'parallax1', { key: 'parallax1' });
+    const parallax2 = tilemap.createFromObjects('background', 'parallax2', { key: 'parallax2' });
+    const jungle = tilemap.createFromObjects('background', 'jungle', { key: 'jungle' });
+
+    // props
+    const skullpanel = tilemap.createFromObjects('props', 'skullpanel', { key: 'skullpanel' });
+    const plant = tilemap.createFromObjects('props', 'plant', { key: 'plant' });
+    const tree1 = tilemap.createFromObjects('props', 'tree1', { key: 'tree1' });
+    const tree2 = tilemap.createFromObjects('props', 'tree2', { key: 'tree2' });
 
     // platform
-    this.platforms = this.physics.add.staticGroup();
-    this.platforms.create(200, 200, 'platform');
-    this.platforms.create(300, 350, 'platform');
-    this.platforms.create(200, 500 - 16, 'platform');
-    */
+    const tileset = tilemap.addTilesetImage('tileset', 'tileset');
+    this.platform = tilemap.createStaticLayer('platform', tileset, 0, 0);
+  }
+
+  create() {
+    this.addFromTilemap();
 
     // main player
     this.player = new Player(this, 100, 100, {
@@ -81,8 +113,8 @@ class MainScene extends Scene {
 
     // collision detection between player & tilemap
     // this.physics.add.collider(this.player, this.platforms);
-    this.layer.setCollisionByProperty({ collides: true });
-    this.physics.add.collider(this.player, this.layer);
+    this.platform.setCollisionByProperty({ collides: true });
+    this.physics.add.collider(this.player, this.platform);
 
     // bullets
     this.bullets = new Bullets(this, 0, 0, 'bullet');
