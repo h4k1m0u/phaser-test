@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import MainScene from './scenes/main';
+import './scss/style.scss';
 
 const config = {
   type: Phaser.AUTO,

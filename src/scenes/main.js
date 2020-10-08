@@ -140,7 +140,11 @@ class MainScene extends Scene {
     */
 
     // score text
-    this.scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: 32, fill: '#000' });
+    this.scoreText = this.add.text(16, 16, 'Score: 0', {
+      fontSize: 16,
+      fontFamily: 'Helvetica',
+      fill: '#fff',
+    });
   }
 
   update() {
