@@ -64,7 +64,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   jump() {
-    this.setVelocityY(-100);
+    this.setVelocityY(-200);
     this.direction = 'up';
     this.anims.play((this.texture.key.endsWith('left')) ? 'anim-jump-left' : 'anim-jump-right', false);
   }

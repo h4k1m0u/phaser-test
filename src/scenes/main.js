@@ -19,11 +19,9 @@ import pathSpritePlayerJumpRight from '../sprites/player_jump_right.png';
 import pathBullet from '../sprites/bullet.png';
 
 // background images
-import pathCloud1 from '../sprites/clouds1.png';
-import pathCloud2 from '../sprites/clouds2.png';
-import pathJungle from '../sprites/jungle.png';
-import pathParallax1 from '../sprites/parallax1.png';
-import pathParallax2 from '../sprites/parallax2.png';
+import pathClouds from '../sprites/clouds.png';
+import pathJungleBackground from '../sprites/jungle-background.png';
+import pathJungleForeground from '../sprites/jungle-foreground.png';
 
 // props images
 import pathTree1 from '../sprites/tree1.png';
@@ -44,12 +42,10 @@ class MainScene extends Scene {
     this.load.image('tileset', pathTileset);
     this.load.tilemapTiledJSON('tilemap', pathTilemap);
 
-    // background sprites
-    this.load.image('cloud1', pathCloud1);
-    this.load.image('cloud2', pathCloud2);
-    this.load.image('jungle', pathJungle);
-    this.load.image('parallax1', pathParallax1);
-    this.load.image('parallax2', pathParallax2);
+    // background
+    this.load.image('clouds', pathClouds);
+    this.load.image('jungle-background', pathJungleBackground);
+    this.load.image('jungle-foreground', pathJungleForeground);
 
     // props sprites
     this.load.image('tree1', pathTree1);
@@ -80,14 +76,10 @@ class MainScene extends Scene {
     this.width = tilemap.width * tilemap.tileWidth;
     this.height = tilemap.height * tilemap.tileHeight;
 
-    // clouds
-    const clouds1 = tilemap.createFromObjects('clouds', 'cloud1', { key: 'cloud1' });
-    const clouds2 = tilemap.createFromObjects('clouds', 'cloud2', { key: 'cloud2' });
-
-    // background vegetation
-    const parallax1 = tilemap.createFromObjects('background', 'parallax1', { key: 'parallax1' });
-    const parallax2 = tilemap.createFromObjects('background', 'parallax2', { key: 'parallax2' });
-    const jungle = tilemap.createFromObjects('background', 'jungle', { key: 'jungle' });
+    // parallax background
+    this.clouds = this.add.tileSprite(0, 0, this.width, this.height, 'clouds').setOrigin(0, 0);
+    this.jungleBackground = this.add.tileSprite(0, 0, this.width, this.height, 'jungle-background').setOrigin(0, 0);
+    this.jungleForeground = this.add.tileSprite(0, 0, this.width, this.height, 'jungle-foreground').setOrigin(0, 0);
 
     // props
     const skullpanel = tilemap.createFromObjects('props', 'skullpanel', { key: 'skullpanel' });
@@ -101,6 +93,7 @@ class MainScene extends Scene {
   }
 
   create() {
+    // tilemap
     this.addFromTilemap();
 
     // main player
@@ -153,6 +146,11 @@ class MainScene extends Scene {
   }
 
   update() {
+    // scroll parallax accord. to camera position
+    this.clouds.setTilePosition(this.cameras.main.scrollX * 0.1);
+    this.jungleBackground.setTilePosition(this.cameras.main.scrollX * 0.2);
+    this.jungleForeground.setTilePosition(this.cameras.main.scrollX * 0.3);
+
     // keyboard interactions inside game loop
     const cursors = this.input.keyboard.createCursorKeys();
 
