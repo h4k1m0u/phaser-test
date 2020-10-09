@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="150" height="50" tilewidth="8" tileheight="8" infinite="0" nextlayerid="13" nextobjectid="35">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="150" height="50" tilewidth="8" tileheight="8" infinite="0" nextlayerid="13" nextobjectid="41">
  <editorsettings>
   <export target="map.json" format="json"/>
  </editorsettings>
@@ -623,10 +623,19 @@
    <image width="50" height="59" source="../sprites/tree1.png"/>
   </tile>
  </tileset>
- <tileset firstgid="131" name="props" tilewidth="5" tileheight="16" tilecount="1" columns="0">
+ <tileset firstgid="131" name="props" tilewidth="64" tileheight="42" tilecount="4" columns="0">
   <grid orientation="orthogonal" width="1" height="1"/>
   <tile id="0">
    <image width="5" height="16" source="../sprites/skullpanel.png"/>
+  </tile>
+  <tile id="1">
+   <image width="16" height="16" source="../sprites/crate.png"/>
+  </tile>
+  <tile id="2">
+   <image width="13" height="16" source="../sprites/barrel.png"/>
+  </tile>
+  <tile id="3">
+   <image width="64" height="42" source="../sprites/shelter.png"/>
   </tile>
  </tileset>
  <layer id="11" name="platform" width="150" height="50">
@@ -643,5 +652,11 @@
   <object id="30" name="tree1" gid="130" x="1080" y="144" width="50" height="59"/>
   <object id="31" name="tree1" gid="130" x="696" y="144" width="50" height="59"/>
   <object id="32" name="tree2" gid="128" x="544" y="144" width="40" height="59"/>
+  <object id="35" name="crate" gid="132" x="1032" y="200" width="16" height="16"/>
+  <object id="36" name="crate" gid="132" x="520" y="320" width="16" height="16"/>
+  <object id="37" name="crate" gid="132" x="344" y="208" width="16" height="16"/>
+  <object id="38" name="barrel" gid="133" x="920" y="256" width="13" height="16"/>
+  <object id="39" name="barrel" gid="133" x="1096" y="320" width="13" height="16"/>
+  <object id="40" name="shelter" gid="134" x="672" y="320" width="64" height="42"/>
  </objectgroup>
 </map>

@@ -28,10 +28,13 @@ import pathTree1 from '../sprites/tree1.png';
 import pathTree2 from '../sprites/tree2.png';
 import pathPlant from '../sprites/plant.png';
 import pathSkullpanel from '../sprites/skullpanel.png';
+import pathBarrel from '../sprites/barrel.png';
+import pathShelter from '../sprites/shelter.png';
+import pathCrate from '../sprites/crate.png';
 
 class MainScene extends Scene {
-  constructor(config) {
-    super(config);
+  constructor() {
+    super({ key: 'scene-main' });
 
     // initialize score
     this.score = 0;
@@ -52,6 +55,9 @@ class MainScene extends Scene {
     this.load.image('tree2', pathTree2);
     this.load.image('plant', pathPlant);
     this.load.image('skullpanel', pathSkullpanel);
+    this.load.image('barrel', pathBarrel);
+    this.load.image('crate', pathCrate);
+    this.load.image('shelter', pathShelter);
 
     /*
     // load images & sprites sheet
@@ -81,19 +87,25 @@ class MainScene extends Scene {
     this.jungleBackground = this.add.tileSprite(0, 0, this.width, this.height, 'jungle-background').setOrigin(0, 0);
     this.jungleForeground = this.add.tileSprite(0, 0, this.width, this.height, 'jungle-foreground').setOrigin(0, 0);
 
-    // props
-    const skullpanel = tilemap.createFromObjects('props', 'skullpanel', { key: 'skullpanel' });
-    const plant = tilemap.createFromObjects('props', 'plant', { key: 'plant' });
-    const tree1 = tilemap.createFromObjects('props', 'tree1', { key: 'tree1' });
-    const tree2 = tilemap.createFromObjects('props', 'tree2', { key: 'tree2' });
-
     // platform
     const tileset = tilemap.addTilesetImage('tileset', 'tileset');
     this.platform = tilemap.createStaticLayer('platform', tileset, 0, 0);
+
+    // props
+    tilemap.createFromObjects('props', 'skullpanel', { key: 'skullpanel' });
+    tilemap.createFromObjects('props', 'plant', { key: 'plant' });
+    tilemap.createFromObjects('props', 'tree1', { key: 'tree1' });
+    tilemap.createFromObjects('props', 'tree2', { key: 'tree2' });
+    tilemap.createFromObjects('props', 'barrel', { key: 'barrel' });
+    tilemap.createFromObjects('props', 'shelter', { key: 'shelter' });
+
+    // crates props can be collected by user
+    const crates = tilemap.createFromObjects('props', 'crate', { key: 'crate' });
+    this.crates = this.physics.add.staticGroup(crates);
   }
 
   create() {
-    // tilemap
+    // tilemap & its sprites
     this.addFromTilemap();
 
     // main player
@@ -114,43 +126,19 @@ class MainScene extends Scene {
     this.bullets = new Bullets(this, 0, 0, 'bullet');
     // this.physics.add.collider(this.bullet, this.platforms);
 
-    // stars
-    /*
-    this.stars = this.physics.add.group({
-      key: 'star',
-      repeat: 11,
-      setXY: { x: 12, y: 0, stepX: 70 },
-    });
-
-    // collision detection for stars
-    this.physics.add.collider(this.stars, this.platforms);
-    this.physics.add.collider(this.player, this.stars, (player, star) => {
-      star.disableBody(true, true);
-
-      // increment score
+    // emit event to score scene to increment score on collision
+    this.physics.add.collider(this.player, this.crates, (player, crate) => {
       this.score += 10;
-      this.scoreText.setText(`Score: ${this.score}`);
-    });
-    */
-
-    // score text
-    this.scoreText = this.add.text(16, 16, 'Score: 0', {
-      fontSize: 16,
-      fontFamily: 'Helvetica',
-      fill: '#fff',
+      this.events.emit('onScoreIncremented', this.score);
+      crate.destroy();
     });
 
     // camera tracks player till scene borders
     this.cameras.main.setBounds(0, 0, this.width, this.height);
-    this.cameras.main.startFollow(this.player);
+    this.cameras.main.startFollow(this.player, true);
   }
 
   update() {
-    // scroll parallax accord. to camera position
-    this.clouds.setTilePosition(this.cameras.main.scrollX * 0.1);
-    this.jungleBackground.setTilePosition(this.cameras.main.scrollX * 0.2);
-    this.jungleForeground.setTilePosition(this.cameras.main.scrollX * 0.3);
-
     // keyboard interactions inside game loop
     const cursors = this.input.keyboard.createCursorKeys();
 
@@ -175,6 +163,11 @@ class MainScene extends Scene {
       const x = this.player.x + ((this.player.direction === 'right') ? 10 : -10);
       this.bullets.fire(x, this.player.y + 5, this.player.direction);
     }
+
+    // scroll parallax accord. to camera position
+    this.clouds.setTilePosition(this.cameras.main.scrollX * 0.1);
+    this.jungleBackground.setTilePosition(this.cameras.main.scrollX * 0.2);
+    this.jungleForeground.setTilePosition(this.cameras.main.scrollX * 0.3);
   }
 }
 

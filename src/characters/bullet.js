@@ -19,7 +19,7 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
     super.preUpdate(time, delta);
 
     // hide & deactivate after once outside canvas
-    if (this.x < 0 || this.x > this.scene.game.config.width) {
+    if (this.x < 0 || this.x > this.scene.width) {
       this.setVisible(false);
       this.setActive(false);
     }

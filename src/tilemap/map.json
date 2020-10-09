@@ -124,6 +124,78 @@
                  "width":40,
                  "x":544,
                  "y":144
+                }, 
+                {
+                 "gid":132,
+                 "height":16,
+                 "id":35,
+                 "name":"crate",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":1032,
+                 "y":200
+                }, 
+                {
+                 "gid":132,
+                 "height":16,
+                 "id":36,
+                 "name":"crate",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":520,
+                 "y":320
+                }, 
+                {
+                 "gid":132,
+                 "height":16,
+                 "id":37,
+                 "name":"crate",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":344,
+                 "y":208
+                }, 
+                {
+                 "gid":133,
+                 "height":16,
+                 "id":38,
+                 "name":"barrel",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":13,
+                 "x":920,
+                 "y":256
+                }, 
+                {
+                 "gid":133,
+                 "height":16,
+                 "id":39,
+                 "name":"barrel",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":13,
+                 "x":1096,
+                 "y":320
+                }, 
+                {
+                 "gid":134,
+                 "height":42,
+                 "id":40,
+                 "name":"shelter",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":672,
+                 "y":320
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -132,7 +204,7 @@
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":35,
+ "nextobjectid":41,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.4.2",
@@ -1288,16 +1360,34 @@
          "margin":0,
          "name":"props",
          "spacing":0,
-         "tilecount":1,
-         "tileheight":16,
+         "tilecount":4,
+         "tileheight":42,
          "tiles":[
                 {
                  "id":0,
                  "image":"..\/sprites\/skullpanel.png",
                  "imageheight":16,
                  "imagewidth":5
+                }, 
+                {
+                 "id":1,
+                 "image":"..\/sprites\/crate.png",
+                 "imageheight":16,
+                 "imagewidth":16
+                }, 
+                {
+                 "id":2,
+                 "image":"..\/sprites\/barrel.png",
+                 "imageheight":16,
+                 "imagewidth":13
+                }, 
+                {
+                 "id":3,
+                 "image":"..\/sprites\/shelter.png",
+                 "imageheight":42,
+                 "imagewidth":64
                 }],
-         "tilewidth":5
+         "tilewidth":64
         }],
  "tilewidth":8,
  "type":"map",
