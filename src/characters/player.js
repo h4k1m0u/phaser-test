@@ -9,7 +9,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     // add sprite to scene & attach body to it
     scene.add.existing(this);
     scene.physics.add.existing(this);
-    this.setCollideWorldBounds(true);
+    // this.setCollideWorldBounds(true);
 
     // player animations
     scene.anims.create({

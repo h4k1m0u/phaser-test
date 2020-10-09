@@ -77,6 +77,8 @@ class MainScene extends Scene {
   addFromTilemap() {
     // add tilemap layers
     const tilemap = this.make.tilemap({ key: 'tilemap' });
+    this.width = tilemap.width * tilemap.tileWidth;
+    this.height = tilemap.height * tilemap.tileHeight;
 
     // clouds
     const clouds1 = tilemap.createFromObjects('clouds', 'cloud1', { key: 'cloud1' });
@@ -112,7 +114,6 @@ class MainScene extends Scene {
     });
 
     // collision detection between player & tilemap
-    // this.physics.add.collider(this.player, this.platforms);
     this.platform.setCollisionByProperty({ collides: true });
     this.physics.add.collider(this.player, this.platform);
 
@@ -145,6 +146,10 @@ class MainScene extends Scene {
       fontFamily: 'Helvetica',
       fill: '#fff',
     });
+
+    // camera tracks player till scene borders
+    this.cameras.main.setBounds(0, 0, this.width, this.height);
+    this.cameras.main.startFollow(this.player);
   }
 
   update() {
