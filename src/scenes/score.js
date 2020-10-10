@@ -16,7 +16,7 @@ class ScoreScene extends Scene {
 
     // capture score incremented event emitted from main scene
     const mainScene = this.scene.get('scene-main');
-    mainScene.events.on('onScoreIncremented', (score) => {
+    mainScene.events.on('onScoreChanged', (score) => {
       this.scoreText.setText(`Score: ${score}`);
     });
   }

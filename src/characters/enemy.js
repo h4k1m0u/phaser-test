@@ -7,11 +7,13 @@ class Enemy extends GameObjects.PathFollower {
     const point2 = { x: line.x + line.polyline[1].x, y: line.y + line.polyline[1].y };
     const path = scene.add.path();
     path.add(new Curves.Line(point1, point2));
-    super(scene, path, x, y, texture.right);
+    super(scene, path, x, y, texture);
+    this.texture = texture;
+    this.setName('Enemy');
 
     // add sprite to scene & attach body to it
     scene.add.existing(this);
-    // scene.physics.add.existing(this);
+    scene.physics.add.existing(this);
 
     // animation
     scene.anims.create({
@@ -40,6 +42,11 @@ class Enemy extends GameObjects.PathFollower {
         this.flipX = false;
       },
     });
+  }
+
+  stop() {
+    this.stopFollow();
+    this.anims.stop();
   }
 }
 

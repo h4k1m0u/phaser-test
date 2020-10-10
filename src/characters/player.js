@@ -3,8 +3,9 @@ import { Physics } from 'phaser';
 class Player extends Physics.Arcade.Sprite {
   constructor(scene, x, y, textures) {
     super(scene, x, y, textures.static);
+    this.setName('Player');
     this.textures = textures;
-    this.isJumping = false;
+    this.isDead = false;
 
     // add sprite to scene & attach body to it
     scene.add.existing(this);
@@ -48,6 +49,12 @@ class Player extends Physics.Arcade.Sprite {
   jump() {
     this.setVelocityY(-200);
     this.anims.play('anim-player-jump', true);
+  }
+
+  kill() {
+    this.setTint(0xff0000);
+    this.anims.stop();
+    this.isDead = true;
   }
 }
 

@@ -119,6 +119,42 @@ class MainScene extends Scene {
     this.enemies = this.add.group(enemiesArr);
   }
 
+  detectCollisions() {
+    // player/enemies & platform
+    this.platform.setCollisionByProperty({ collides: true });
+    this.physics.add.collider(this.player, this.platform);
+    this.physics.add.collider(this.enemies, this.platform);
+
+    // enemies & bullets
+    this.bullets = new Bullets(this);
+    this.physics.add.collider(this.enemies, this.bullets, (enemy, bullet) => {
+      enemy.destroy();
+      bullet.destroy();
+      this.score += 10;
+      this.events.emit('onScoreChanged', this.score);
+    });
+
+    // player & crates
+    this.physics.add.collider(this.player, this.crates, (player, crate) => {
+      crate.destroy();
+      this.score += 5;
+      this.events.emit('onScoreChanged', this.score);
+    });
+
+    // player & enemies
+    this.physics.add.collider(this.enemies, this.player, (enemy, player) => {
+      this.physics.pause();
+      player.kill();
+      enemy.stop();
+
+      this.time.delayedCall(1000, () => {
+        this.scene.restart();
+        this.score = 0;
+        this.events.emit('onScoreChanged', this.score);
+      });
+    });
+  }
+
   create() {
     // tilemap
     const tilemap = this.make.tilemap({ key: 'tilemap' });
@@ -129,28 +165,19 @@ class MainScene extends Scene {
     this.addPropsFromTilemap(tilemap);
     this.addCharactersFromTilemap(tilemap);
 
-    // collision detection between characters & tilemap
-    this.platform.setCollisionByProperty({ collides: true });
-    this.physics.add.collider(this.player, this.platform);
-    // this.physics.add.collider(this.enemies, this.platform);
-
-    // bullets
-    this.bullets = new Bullets(this, 0, 0, 'bullet');
-    // this.physics.add.collider(this.bullet, this.platforms);
-
-    // emit event to score scene to increment score on collision
-    this.physics.add.collider(this.player, this.crates, (player, crate) => {
-      this.score += 10;
-      this.events.emit('onScoreIncremented', this.score);
-      crate.destroy();
-    });
-
     // camera tracks player till scene borders
     this.cameras.main.setBounds(0, 0, this.width, this.height);
     this.cameras.main.startFollow(this.player, true);
+
+    // collisions detection between all characters
+    this.detectCollisions();
   }
 
   update() {
+    if (this.player.isDead) {
+      return;
+    }
+
     // keyboard interactions inside game loop
     const cursors = this.input.keyboard.createCursorKeys();
 
@@ -172,8 +199,8 @@ class MainScene extends Scene {
     // player shooting bullets to the left/right
     const spacebar = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.SPACE);
     if (Input.Keyboard.JustDown(spacebar)) {
-      const x = this.player.x + ((this.player.direction === 'right') ? 10 : -10);
-      this.bullets.fire(x, this.player.y + 5, this.player.direction);
+      const x = this.player.x + ((!this.player.flipX) ? 10 : -10);
+      this.bullets.fire(x, this.player.y + 5, !this.player.flipX);
     }
 
     // scroll parallax accord. to camera position
