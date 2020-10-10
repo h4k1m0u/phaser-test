@@ -13,13 +13,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     // player animations
     scene.anims.create({
-      key: 'anim-left',
+      key: 'anim-player-left',
       frames: scene.anims.generateFrameNumbers(textures.left, { start: 0, end: 9 }),
       frameRate: 10,
       repeat: 0,
     });
     scene.anims.create({
-      key: 'anim-right',
+      key: 'anim-player-right',
       frames: scene.anims.generateFrameNumbers(textures.right, {
         start: 0,
         end: 9,
@@ -28,13 +28,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
       repeat: 0,
     });
     scene.anims.create({
-      key: 'anim-jump-left',
+      key: 'anim-player-jump-left',
       frames: scene.anims.generateFrameNumbers(textures.jump_left, { start: 0, end: 8 }),
       frameRate: 10,
       repeat: 0,
     });
     scene.anims.create({
-      key: 'anim-jump-right',
+      key: 'anim-player-jump-right',
       frames: scene.anims.generateFrameNumbers(textures.jump_right, { start: 0, end: 8 }),
       frameRate: 10,
       repeat: 0,
@@ -53,20 +53,20 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
   moveLeft() {
     this.setVelocityX(-150);
-    this.anims.play('anim-left', true);
+    this.anims.play('anim-player-left', true);
     this.direction = 'left';
   }
 
   moveRight() {
     this.setVelocityX(150);
-    this.anims.play('anim-right', true);
+    this.anims.play('anim-player-right', true);
     this.direction = 'right';
   }
 
   jump() {
     this.setVelocityY(-200);
     this.direction = 'up';
-    this.anims.play((this.texture.key.endsWith('left')) ? 'anim-jump-left' : 'anim-jump-right', false);
+    this.anims.play((this.texture.key.endsWith('left')) ? 'anim-player-jump-left' : 'anim-player-jump-right', false);
   }
 }
 
