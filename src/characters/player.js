@@ -1,10 +1,10 @@
-import Phaser from 'phaser';
+import { Physics } from 'phaser';
 
-class Player extends Phaser.Physics.Arcade.Sprite {
+class Player extends Physics.Arcade.Sprite {
   constructor(scene, x, y, textures) {
-    super(scene, x, y, textures.static_right);
-    this.direction = 'right';
+    super(scene, x, y, textures.static);
     this.textures = textures;
+    this.isJumping = false;
 
     // add sprite to scene & attach body to it
     scene.add.existing(this);
@@ -13,29 +13,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     // player animations
     scene.anims.create({
-      key: 'anim-player-left',
-      frames: scene.anims.generateFrameNumbers(textures.left, { start: 0, end: 9 }),
+      key: 'anim-player-run',
+      frames: scene.anims.generateFrameNumbers(textures.run, { start: 0, end: 9 }),
       frameRate: 10,
       repeat: 0,
     });
     scene.anims.create({
-      key: 'anim-player-right',
-      frames: scene.anims.generateFrameNumbers(textures.right, {
-        start: 0,
-        end: 9,
-      }),
-      frameRate: 10,
-      repeat: 0,
-    });
-    scene.anims.create({
-      key: 'anim-player-jump-left',
-      frames: scene.anims.generateFrameNumbers(textures.jump_left, { start: 0, end: 8 }),
-      frameRate: 10,
-      repeat: 0,
-    });
-    scene.anims.create({
-      key: 'anim-player-jump-right',
-      frames: scene.anims.generateFrameNumbers(textures.jump_right, { start: 0, end: 8 }),
+      key: 'anim-player-jump',
+      frames: scene.anims.generateFrameNumbers(textures.jump, { start: 0, end: 8 }),
       frameRate: 10,
       repeat: 0,
     });
@@ -43,30 +28,26 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
   stop() {
     this.setVelocityX(0);
-
-    if (this.direction === 'left') {
-      this.setTexture(this.textures.static_left);
-    } else if (this.direction === 'right') {
-      this.setTexture(this.textures.static_right);
+    if (this.body.velocity.y === 0) {
+      this.setTexture(this.textures.static);
     }
   }
 
   moveLeft() {
     this.setVelocityX(-150);
-    this.anims.play('anim-player-left', true);
-    this.direction = 'left';
+    this.flipX = true;
+    this.anims.play('anim-player-run', true);
   }
 
   moveRight() {
     this.setVelocityX(150);
-    this.anims.play('anim-player-right', true);
-    this.direction = 'right';
+    this.flipX = false;
+    this.anims.play('anim-player-run', true);
   }
 
   jump() {
     this.setVelocityY(-200);
-    this.direction = 'up';
-    this.anims.play((this.texture.key.endsWith('left')) ? 'anim-player-jump-left' : 'anim-player-jump-right', false);
+    this.anims.play('anim-player-jump', true);
   }
 }
 

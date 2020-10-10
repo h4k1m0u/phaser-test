@@ -1,7 +1,7 @@
 import { Scene, Input } from 'phaser';
 import Player from '../characters/player';
 import Bullets from '../characters/bullets';
-import Enemies from '../characters/enemies';
+import Enemy from '../characters/enemy';
 
 // import images
 /*
@@ -11,17 +11,13 @@ import pathTileset from '../tilemap/tileset.png';
 import pathTilemap from '../tilemap/map.json';
 
 // player images
-import pathPlayerStaticLeft from '../sprites/player_static_left.png';
-import pathPlayerStaticRight from '../sprites/player_static_right.png';
-import pathPlayerLeft from '../sprites/player_left.png';
-import pathPlayerRight from '../sprites/player_right.png';
-import pathPlayerJumpLeft from '../sprites/player_jump_left.png';
-import pathPlayerJumpRight from '../sprites/player_jump_right.png';
+import pathPlayer from '../sprites/player.png';
+import pathPlayerRun from '../sprites/player_run.png';
+import pathPlayerJump from '../sprites/player_jump.png';
 import pathBullet from '../sprites/bullet.png';
 
 // enemy images
-// import pathEnemyStaticRight from '../sprites/enemy_static_right.png';
-import pathEnemyRight from '../sprites/enemy_right.png';
+import pathEnemyRun from '../sprites/enemy_run.png';
 
 // background images
 import pathClouds from '../sprites/clouds.png';
@@ -70,19 +66,15 @@ class MainScene extends Scene {
     */
 
     // player texture & sprite sheets
-    this.load.image('player-static-left', pathPlayerStaticLeft);
-    this.load.image('player-static-right', pathPlayerStaticRight);
-    this.load.spritesheet('player-left', pathPlayerLeft, { spacing: 2, frameWidth: 22, frameHeight: 22 });
-    this.load.spritesheet('player-right', pathPlayerRight, { spacing: 2, frameWidth: 22, frameHeight: 22 });
-    this.load.spritesheet('player-jump-left', pathPlayerJumpLeft, { spacing: 2, frameWidth: 22, frameHeight: 22 });
-    this.load.spritesheet('player-jump-right', pathPlayerJumpRight, { spacing: 2, frameWidth: 22, frameHeight: 22 });
+    this.load.image('player', pathPlayer);
+    this.load.spritesheet('player-run', pathPlayerRun, { spacing: 2, frameWidth: 22, frameHeight: 22 });
+    this.load.spritesheet('player-jump', pathPlayerJump, { spacing: 2, frameWidth: 22, frameHeight: 22 });
 
     // bullet sprite sheet
     this.load.spritesheet('bullet', pathBullet, { spacing: 2, frameWidth: 8, frameHeight: 8 });
 
     // enemy texture & sprite sheets
-    // this.load.image('enemy-static-right', pathEnemyStaticRight);
-    this.load.spritesheet('enemy-right', pathEnemyRight, { spacing: 2, frameWidth: 22, frameHeight: 22 });
+    this.load.spritesheet('enemy-run', pathEnemyRun, { spacing: 2, frameWidth: 22, frameHeight: 22 });
   }
 
   addPropsFromTilemap(tilemap) {
@@ -109,21 +101,22 @@ class MainScene extends Scene {
     const cratesArr = tilemap.createFromObjects('characters', 'crate', { key: 'crate' });
     this.crates = this.physics.add.staticGroup(cratesArr);
 
-    // enemy
-    tilemap.addTilesetImage('characters', 'enemy-right');
-    const enemiesArr = tilemap.createFromObjects('characters', 'enemy', { key: 'enemy-right' });
-    this.enemies = new Enemies(this, enemiesArr);
-
     // main player
     const spawnPoint = tilemap.findObject('characters', (object) => object.name === 'player');
     this.player = new Player(this, spawnPoint.x, spawnPoint.y, {
-      static_left: 'player-static-left',
-      static_right: 'player-static-right',
-      left: 'player-left',
-      right: 'player-right',
-      jump_left: 'player-jump-left',
-      jump_right: 'player-jump-right',
+      static: 'player',
+      run: 'player-run',
+      jump: 'player-jump',
     });
+
+    // enemy walks line in tilemap
+    const lines = tilemap.filterObjects('paths', (object) => object.name === 'line');
+    const enemiesArr = [];
+    lines.forEach((line) => {
+      const enemy = new Enemy(this, line, 0, 0, 'enemy-run').setOrigin(0, 1);
+      enemiesArr.push(enemy);
+    });
+    this.enemies = this.add.group(enemiesArr);
   }
 
   create() {
@@ -139,7 +132,7 @@ class MainScene extends Scene {
     // collision detection between characters & tilemap
     this.platform.setCollisionByProperty({ collides: true });
     this.physics.add.collider(this.player, this.platform);
-    this.physics.add.collider(this.enemies, this.platform);
+    // this.physics.add.collider(this.enemies, this.platform);
 
     // bullets
     this.bullets = new Bullets(this, 0, 0, 'bullet');
